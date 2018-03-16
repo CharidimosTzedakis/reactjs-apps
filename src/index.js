@@ -50,8 +50,9 @@ class Game extends React.Component {
     super(props);
     this.state = {
       history: [{
-        squares: Array(9).fill(null),
-      }],
+        squares: Array(9).fill(null),     /* specific board instance          */
+        squarePlayed: -1,                 /* holds the move that was played   */
+      }],                                 /* in the board described by squares*/
       stepNumber: 0,
       xIsNext: true,
     };
@@ -68,6 +69,7 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([{
         squares: squares,
+        squarePlayed: i,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -79,13 +81,26 @@ class Game extends React.Component {
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     });
+
+    //--> make bold the clicked button from move history list<--//
+    let element;
+
+    for (let i=0; i<this.state.history.length; i++){
+      element = document.getElementById(i);
+      if (i===step){
+        element.style.fontWeight = "bold";
+      }
+      else{
+        element.style.fontWeight = "normal";
+      }
+    }
   }
 
-  //calculate for a particular history which was the move
-  rowColPositionForStep (step, move){
+  //--> calculate for a particular history which was the move by doing the diff <--//
+  //--> or by just using squarePlayed from state                                <--//
+  rowColPositionForStep (boardInstance, move){
     const history = this.state.history;
-    const boardInstance = step;
-    const previousMove = move-1;
+/*  const previousMove = move-1;
     const currentMoveIndex = boardInstance.squares.findIndex( (element, index) =>{
         if ((element ==='X' || element ==='O') &&
             (previousMove >= 0) &&
@@ -95,7 +110,8 @@ class Game extends React.Component {
         else {
           return false;
         }
-    });
+    });     */
+    const currentMoveIndex = boardInstance.squarePlayed;
     let rowColPositionString = '';
     if (currentMoveIndex !== -1){
       const row = Math.trunc(currentMoveIndex/3) +1;
@@ -104,7 +120,7 @@ class Game extends React.Component {
     }
     return rowColPositionString;
   }
-
+ //--> ----------------------------------------------------------------------- <---//
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -116,7 +132,7 @@ class Game extends React.Component {
         'Go to game start';
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <button id={move} onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
     });
