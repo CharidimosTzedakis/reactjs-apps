@@ -53,6 +53,7 @@ class Game extends React.Component {
       }],                                 /* in the board described by squares*/
       stepNumber: 0,
       xIsNext: true,
+      showMovesOrder: 'firstToLast',
     };
   }
 
@@ -91,6 +92,20 @@ class Game extends React.Component {
       else{
         element.style.fontWeight = "normal";
       }
+    }
+  }
+
+  //toggle sorting of moves Ascending/Descending
+  toggleMoveButtonOrder(){
+    if (this.state.showMovesOrder === 'firstToLast'){
+      this.setState({
+        showMovesOrder: 'lastToFirst',
+      });
+    }
+    else{
+      this.setState({
+        showMovesOrder: 'firstToLast',
+      });
     }
   }
 
@@ -135,6 +150,10 @@ class Game extends React.Component {
       );
     });
 
+    if (this.state.showMovesOrder === 'lastToFirst'){
+      moves.reverse();
+    }
+
     let status;
     if (winner) {
       status = 'Winner: ' + winner;
@@ -154,6 +173,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{ status }</div>
+          <button onClick={() => this.toggleMoveButtonOrder()}>Sort Ascending/Descending</button>
           <ol>{ moves }</ol>
         </div>
       </div>
