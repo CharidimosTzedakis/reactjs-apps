@@ -4,7 +4,7 @@ import './index.css';
 
 function Square(props) {
   return (
-    <button className="square" className={props.class} onClick={props.onClick}>
+    <button className={`square ${props.class}`} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -14,9 +14,9 @@ class Board extends React.Component {
 
   renderSquare(i) {
     
-    let buttonClass;
+    let buttonClass='';
     for (let j in this.props.winningSquares){
-      if (i===j) {
+      if (i === this.props.winningSquares[Number(j)]) {
         buttonClass = 'winningSquare';
         break;
       }
@@ -166,8 +166,8 @@ class Game extends React.Component {
     }
 
     let status;
-    if (winner) {
-      status = 'Winner: ' + winner;
+    if (winner!==null) {
+      status = 'Winner: ' + current.squares[winner];
     }
     else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
