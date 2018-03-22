@@ -169,6 +169,9 @@ class Game extends React.Component {
     if (winner!==null) {
       status = 'Winner: ' + current.squares[winner];
     }
+    else if (calculateDraw(current.squares)){
+      status = 'There is a draw.'
+    }
     else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
@@ -191,6 +194,20 @@ class Game extends React.Component {
       </div>
     );
   }
+}
+
+function calculateDraw(squares){
+  let emptySquares = 9;
+  for (let i = 0; i < squares.length; i++){
+    if (squares[i] !== null)
+      emptySquares--;
+  }
+  if (emptySquares === 0)
+    return true;
+  else {
+    return false;
+  }
+
 }
 
 function calculateWinner(squares) {
